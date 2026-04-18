@@ -1,38 +1,29 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './styles.css';
-
 export function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
     const { login, isAuthenticated } = useAuth();
     const navigate = useNavigate();
-
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/dashboard');
         }
     }, [isAuthenticated, navigate]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-
         if (!email || !password) {
             setError('Por favor, preencha todos os campos.');
             return;
         }
-
         setIsLoading(true);
-
         const result = await login(email, password);
-
         if (result.success) {
             // Success handles redirection in useEffect or AuthContext state change
         } else {
@@ -40,7 +31,6 @@ export function Login() {
             setIsLoading(false);
         }
     };
-
     return (
         <div className="login-body">
             <div className="particles">
@@ -50,11 +40,10 @@ export function Login() {
                 <div className="particle"></div>
                 <div className="particle"></div>
             </div>
-
             <div className="login-container">
                 <div className="login-left">
                     <div className="login-branding">
-                        <div className="logo-large">
+                        {/* <div className="logo-large">
                             <svg width="64" height="64" viewBox="0 0 32 32" fill="none">
                                 <path d="M16 2L4 8V14C4 21.5 9 28.5 16 30C23 28.5 28 21.5 28 14V8L16 2Z" fill="url(#gradient-large)" />
                                 <defs>
@@ -64,8 +53,8 @@ export function Login() {
                                     </linearGradient>
                                 </defs>
                             </svg>
-                        </div>
-                        <h1>Fabrica Neural</h1>
+                        </div> */}
+                        <h1>Meta API</h1>
                         <p className="tagline">Gestão de Disparos em Massa</p>
                         <p className="description">
                             Potencialize suas campanhas de marketing com nossa plataforma de disparos automatizados para WhatsApp API.
@@ -89,17 +78,21 @@ export function Login() {
                                 </svg>
                                 <span>Segurança garantida</span>
                             </div>
+                            <div className="feature-item">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" fill="currentColor" />
+                                </svg>
+                                <span>API Oficial da Meta</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div className="login-right">
                     <div className="login-form-container">
                         <div className="login-header">
                             <h2>Bem-vindo de volta!</h2>
                             <p>Acesse sua conta para gerenciar disparos</p>
                         </div>
-
                         {error && (
                             <div className="error-message show">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -109,7 +102,6 @@ export function Login() {
                                 <span>{error}</span>
                             </div>
                         )}
-
                         <form className="login-form" onSubmit={handleSubmit} id="login-form">
                             <div className="form-group">
                                 <div className="input-with-icon">
@@ -127,7 +119,6 @@ export function Login() {
                                     />
                                 </div>
                             </div>
-
                             <div className="form-group">
                                 <div className="input-with-icon">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -161,7 +152,6 @@ export function Login() {
                                     </button>
                                 </div>
                             </div>
-
                             <div className="form-options">
                                 <label className="checkbox-container">
                                     <input type="checkbox" id="remember-me" />
@@ -170,7 +160,6 @@ export function Login() {
                                 </label>
                                 <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); alert('Funcionalidade de recuperação de senha em desenvolvimento.'); }}>Esqueceu a senha?</a>
                             </div>
-
                             <button type="submit" className={`btn btn-primary login-btn ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
                                 <span className="btn-text">Entrar na Plataforma</span>
                                 <div className="btn-icon">
@@ -183,7 +172,6 @@ export function Login() {
                                 </svg>
                             </button>
                         </form>
-
                         <div className="login-footer">
                             <p>Não tem uma conta? <a href="#" className="signup-link" onClick={(e) => { e.preventDefault(); alert('Funcionalidade de cadastro em desenvolvimento.'); }}>Fale conosco</a></p>
                         </div>

@@ -1,18 +1,14 @@
-
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-
 export function Sidebar() {
     const location = useLocation();
     const navigate = useNavigate();
     const { logout } = useAuth();
     const currentPath = location.pathname;
-
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
-
     const isActive = (path) => {
         // Handle root path mapping to dashboard
         if (path === '/dashboard' && (currentPath === '/' || currentPath === '/dashboard')) {
@@ -20,7 +16,6 @@ export function Sidebar() {
         }
         return currentPath === path;
     };
-
     return (
         <nav className="sidebar">
             <div className="sidebar-header">
@@ -34,10 +29,9 @@ export function Sidebar() {
                             </linearGradient>
                         </defs>
                     </svg>
-                    <span>Fabrica Neural</span>
+                    <span>Meta API</span>
                 </div>
             </div>
-
             <ul className="nav-menu">
                 <li className={`nav-item ${isActive('/dashboard') ? 'active' : ''}`}>
                     <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', color: 'inherit', textDecoration: 'none' }}>
@@ -89,7 +83,6 @@ export function Sidebar() {
                     </Link>
                 </li>
             </ul>
-
             <div className="sidebar-footer">
                 <button className="nav-item logout-btn" id="logout-btn" onClick={handleLogout}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

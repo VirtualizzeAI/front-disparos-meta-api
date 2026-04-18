@@ -1,4 +1,4 @@
-# Disparos WhatsApp - Fabrica Neural
+# Disparos WhatsApp - Meta API
 
 Sistema de disparos em massa para WhatsApp Business API com interface moderna e intuitiva.
 
@@ -71,11 +71,11 @@ Após o login bem-sucedido, você será redirecionado para o dashboard. Para sai
 
 ### 2. Configurar URL do Backend
 
-A URL base da API já está configurada para o webhook da Fabrica Neural:
+A URL base da API já está configurada para o webhook da Meta API:
 
 ```javascript
 const API_CONFIG = {
-    BASE_URL: 'https://auto.fabricaneural.ia.br/webhook',
+    BASE_URL: 'https://n8n.bisnsihub.cloud/webhook',
     // ...
 };
 ```
@@ -194,7 +194,7 @@ O sistema é totalmente responsivo e se adapta a:
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido para Fabrica Neural.
+Este projeto foi desenvolvido para Meta API.
 
 ## 🤝 Suporte
 
