@@ -135,16 +135,7 @@ export function Profile() {
 
             <div className="settings-container">
                 <form id="profile-form" className="form-card" onSubmit={handleSubmit}>
-                    <div className="form-alert">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M10 2L1 18H19L10 2Z" stroke="currentColor" strokeWidth="2"
-                                strokeLinejoin="round" />
-                            <path d="M10 8V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                            <circle cx="10" cy="15" r="1.5" fill="currentColor" />
-                        </svg>
-                        <span>Atenção: Os dados alterados aqui serão refletidos em todos os sistemas da Fabrica
-                            Neural.</span>
-                    </div>
+                    
 
                     <div className="form-group">
                         <label htmlFor="account-name">Nome da Conta</label>

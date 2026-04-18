@@ -4,7 +4,7 @@ export const API_CONFIG = {
     BASE_URL: 'https://n8n.bisnsihub.cloud/webhook', // Production webhook URL
     ENDPOINTS: {
         // Authentication endpoints
-        LOGIN: '/login',
+        LOGIN: '/login-disparos',
         LOGOUT: '/auth-logout',
         // Blast endpoints
         LIST_BLASTS: '/listar-disparos',
