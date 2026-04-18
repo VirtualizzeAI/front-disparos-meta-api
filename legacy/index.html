@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disparos WhatsApp - Fabrica Neural</title>
+    <meta name="description" content="Sistema de disparos em massa para WhatsApp Business API">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 2L4 8V14C4 21.5 9 28.5 16 30C23 28.5 28 21.5 28 14V8L16 2Z" fill="url(#gradient1)" />
+                    <defs>
+                        <linearGradient id="gradient1" x1="4" y1="2" x2="28" y2="30">
+                            <stop offset="0%" stop-color="#667eea" />
+                            <stop offset="100%" stop-color="#764ba2" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>Fabrica Neural</span>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active" data-page="dashboard">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M3 4C3 3.44772 3.44772 3 4 3H7C7.55228 3 8 3.44772 8 4V7C8 7.55228 7.55228 8 7 8H4C3.44772 8 3 7.55228 3 7V4Z"
+                        fill="currentColor" />
+                    <path
+                        d="M3 13C3 12.4477 3.44772 12 4 12H7C7.55228 12 8 12.4477 8 13V16C8 16.5523 7.55228 17 7 17H4C3.44772 17 3 16.5523 3 16V13Z"
+                        fill="currentColor" />
+                    <path
+                        d="M12 4C12 3.44772 12.4477 3 13 3H16C16.5523 3 17 3.44772 17 4V7C17 7.55228 16.5523 8 16 8H13C12.4477 8 12 7.55228 12 7V4Z"
+                        fill="currentColor" />
+                    <path
+                        d="M12 13C12 12.4477 12.4477 12 13 12H16C16.5523 12 17 12.4477 17 13V16C17 16.5523 16.5523 17 16 17H13C12.4477 17 12 16.5523 12 16V13Z"
+                        fill="currentColor" />
+                </svg>
+                <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-page="disparo">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M2 3L18 10L2 17V11L13 10L2 9V3Z" fill="currentColor" />
+                </svg>
+                <span>Novo Disparo</span>
+            </li>
+            <li class="nav-item" data-page="perfil">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M10 2C11.6569 2 13 3.34315 13 5C13 6.65685 11.6569 8 10 8C8.34315 8 7 6.65685 7 5C7 3.34315 8.34315 2 10 2Z"
+                        fill="currentColor" />
+                    <path d="M4 15C4 12.7909 5.79086 11 8 11H12C14.2091 11 16 12.7909 16 15V18H4V15Z"
+                        fill="currentColor" />
+                </svg>
+                <span>Perfil</span>
+            </li>
+            <li class="nav-item" data-page="numero">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M2 3C2 2.44772 2.44772 2 3 2H5.15287C5.64171 2 6.0589 2.35341 6.13927 2.8356L6.87858 7.27147C6.95075 7.70451 6.73206 8.13397 6.3394 8.3303L4.79126 9.10437C5.90756 11.8783 8.12168 14.0924 10.8956 15.2087L11.6697 13.6606C11.866 13.2679 12.2955 13.0492 12.7285 13.1214L17.1644 13.8607C17.6466 13.9411 18 14.3583 18 14.8471V17C18 17.5523 17.5523 18 17 18H15C7.8203 18 2 12.1797 2 5V3Z"
+                        fill="currentColor" />
+                </svg>
+                <span>Número Conectado</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="nav-item logout-btn" id="logout-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M13 14L17 10M17 10L13 6M17 10H7M7 3H5C3.89543 3 3 3.89543 3 5V15C3 16.1046 3.89543 17 5 17H7"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Sair</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page active">
+            <header class="page-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="subtitle">Histórico de disparos realizados</p>
+                </div>
+                <button class="btn btn-primary" id="new-blast-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    Novo Disparo
+                </button>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M13 7H7V13H13V7Z" fill="white" />
+                            <path d="M13 17H7V23H13V17Z" fill="white" opacity="0.6" />
+                            <path d="M23 7H17V13H23V7Z" fill="white" opacity="0.6" />
+                            <path d="M23 17H17V23H23V17Z" fill="white" opacity="0.6" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total de Disparos</p>
+                        <p class="stat-value" id="total-blasts">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7V12C2 17.5 6 22.5 12 24C18 22.5 22 17.5 22 12V7L12 2Z" fill="white" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <p class="stat-label">Em Andamento</p>
+                        <p class="stat-value" id="ongoing-blasts">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <p class="stat-label">Concluídos</p>
+                        <p class="stat-value" id="completed-blasts">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 8L12 3L7 8M7 16L12 21L17 16" stroke="white" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total de Contatos</p>
+                        <p class="stat-value" id="total-contacts">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome da Campanha</th>
+                            <th>Data/Hora</th>
+                            <th>Contatos</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blasts-table-body">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Disparo Page -->
+        <div id="disparo-page" class="page">
+            <header class="page-header">
+                <div>
+                    <h1>Novo Disparo</h1>
+                    <p class="subtitle">Configure sua campanha de disparo em massa</p>
+                </div>
+            </header>
+
+            <div class="split-layout">
+                <div class="split-left">
+                    <form id="blast-form" class="form-card">
+                        <div class="form-group">
+                            <label for="campaign-name">Nome da Campanha</label>
+                            <input type="text" id="campaign-name" placeholder="Ex: Promoção Black Friday" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="template-select">Template do Facebook</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="template-select-wrapper">
+                                    <div class="custom-select-display" id="template-select-display">
+                                        <span class="select-placeholder">Selecione um template</span>
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown" id="template-select-dropdown"
+                                        style="display: none;">
+                                        <div class="custom-select-options" id="template-select-options">
+                                            <!-- Options will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <select id="template-select" style="display: none;" required></select>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label>Mídia (Imagem ou Vídeo)</label>
+                            <div class="file-upload-area" id="media-upload-area">
+                                <input type="file" id="media-input" accept="image/*,video/*" hidden>
+                                <div class="upload-placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <path d="M24 14V34M14 24H34" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                    <p>Clique ou arraste para fazer upload</p>
+                                    <span>Imagem ou Vídeo (máx. 16MB)</span>
+                                </div>
+                                <div class="upload-preview" id="media-preview" style="display: none;">
+                                    <img id="preview-image" style="display: none;">
+                                    <video id="preview-video" style="display: none;" controls></video>
+                                    <button type="button" class="remove-media-btn" id="remove-media-btn">×</button>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="contacts-file">Lista de Contatos</label>
+                            <div class="file-upload-area" id="contacts-upload-area">
+                                <input type="file" id="contacts-file" accept=".xlsx,.xls,.csv" hidden required>
+                                <div class="upload-placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <path
+                                            d="M28 4H12C10.9 4 10 4.9 10 6V42C10 43.1 10.9 44 12 44H36C37.1 44 38 43.1 38 42V16L28 4Z"
+                                            stroke="currentColor" stroke-width="2" />
+                                        <path d="M28 4V16H38" stroke="currentColor" stroke-width="2" />
+                                    </svg>
+                                    <p>Clique para selecionar planilha</p>
+                                    <span>Excel ou CSV</span>
+                                </div>
+                                <div class="file-selected" id="contacts-selected" style="display: none;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" />
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                                    </svg>
+                                    <span id="contacts-filename"></span>
+                                    <button type="button" class="remove-file-btn" id="remove-contacts-btn">×</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M2 3L18 10L2 17V11L13 10L2 9V3Z" fill="currentColor" />
+                            </svg>
+                            Iniciar Disparo
+                        </button>
+                    </form>
+                </div>
+
+                <div class="split-right">
+                    <div class="preview-card">
+                        <h3>Prévia WhatsApp</h3>
+                        <div class="whatsapp-preview">
+                            <div class="whatsapp-header">
+                                <div class="whatsapp-avatar"></div>
+                                <div class="whatsapp-info">
+                                    <p class="whatsapp-name">Sua Empresa</p>
+                                    <p class="whatsapp-status">online</p>
+                                </div>
+                            </div>
+                            <div class="whatsapp-chat">
+                                <div class="whatsapp-message">
+                                    <div class="message-media" id="preview-media" style="display: none;">
+                                        <img id="preview-media-image" style="display: none;">
+                                        <video id="preview-media-video" style="display: none;"></video>
+                                    </div>
+                                    <div class="message-text">
+                                        <p id="preview-text">Sua mensagem aparecerá aqui...</p>
+                                    </div>
+                                    <div class="message-time">12:00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfil Page -->
+        <div id="perfil-page" class="page">
+            <header class="page-header">
+                <div>
+                    <h1>Perfil</h1>
+                    <p class="subtitle">Gerencie suas informações pessoais</p>
+                </div>
+            </header>
+
+            <div class="settings-container">
+                <form id="profile-form" class="form-card">
+                    <div class="form-alert">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 2L1 18H19L10 2Z" stroke="currentColor" stroke-width="2"
+                                stroke-linejoin="round" />
+                            <path d="M10 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="10" cy="15" r="1.5" fill="currentColor" />
+                        </svg>
+                        <span>Atenção: Os dados alterados aqui serão refletidos em todos os sistemas da Fabrica
+                            Neural.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="account-name">Nome da Conta</label>
+                        <input type="text" id="account-name" placeholder="Digite o nome da conta" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="account-email">Email</label>
+                        <input type="email" id="account-email" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <h3 class="form-section-title">Alterar Senha</h3>
+
+                    <div class="form-group">
+                        <label for="current-password">Senha Atual</label>
+                        <input type="password" id="current-password" placeholder="Digite sua senha atual">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-password">Nova Senha</label>
+                        <input type="password" id="new-password" placeholder="Digite a nova senha">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmar Nova Senha</label>
+                        <input type="password" id="confirm-password" placeholder="Confirme a nova senha">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M15 7L8 14L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Salvar Perfil
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Número Conectado Page -->
+        <div id="numero-page" class="page">
+            <header class="page-header">
+                <div>
+                    <h1>Número Conectado</h1>
+                    <p class="subtitle">Configure as credenciais do WhatsApp Business API</p>
+                </div>
+            </header>
+
+            <div class="settings-container">
+                <form id="waba-form" class="form-card">
+                    <div class="form-group">
+                        <label for="facebook-token">Token do Facebook</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="facebook-token" placeholder="EAAxxxxxxxxxx..." required>
+                            <button type="button" class="toggle-password-btn" id="toggle-facebook-token"
+                                title="Mostrar/Ocultar senha">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path
+                                        d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5M12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17M12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </button>
+                        </div>
+                        <small class="form-hint">Token de acesso permanente do Facebook Business</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone-number-id">ID do Número</label>
+                        <input type="text" id="phone-number-id" placeholder="123456789012345" required>
+                        <small class="form-hint">ID do número de telefone no WhatsApp Business</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="waba-id">ID da Conta WABA</label>
+                        <input type="text" id="waba-id" placeholder="123456789012345" required>
+                        <small class="form-hint">ID da conta WhatsApp Business API</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M15 7L8 14L4 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Salvar Configurações
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
