@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { NewBlast } from './pages/NewBlast';
 import { Profile } from './pages/Profile';
 import { ConnectedNumber } from './pages/ConnectedNumber';
+import { Templates } from './pages/Templates';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="new-blast" element={<NewBlast />} />
+        <Route path="templates" element={<Templates />} />
         <Route path="profile" element={<Profile />} />
         <Route path="connected-number" element={<ConnectedNumber />} />
       </Route>

@@ -28,7 +28,8 @@ export function getApiUrl(endpoint) {
 }
 // Helper function to get authentication credentials
 export function getAuthCredentials() {
-    const token = localStorage.getItem('authToken') || '';
+    const rawToken = localStorage.getItem('authToken');
+    const token = rawToken && rawToken !== 'undefined' && rawToken !== 'null' ? rawToken : '';
     const userIdStr = localStorage.getItem('userId');
     const userId = userIdStr ? parseInt(userIdStr) : null;
     return { token, userId };
@@ -87,10 +88,28 @@ export async function apiCall(endpoint, options = {}) {
     };
     try {
         const response = await fetch(url, config);
+
+        const responseText = await response.text();
+        const contentType = response.headers.get('content-type') || '';
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorDetails = responseText ? ` - ${responseText}` : '';
+            throw new Error(`HTTP error! status: ${response.status}${errorDetails}`);
         }
-        return await response.json();
+
+        if (!responseText) {
+            return { success: true };
+        }
+
+        if (contentType.includes('application/json')) {
+            return JSON.parse(responseText);
+        }
+
+        try {
+            return JSON.parse(responseText);
+        } catch {
+            return { success: true, data: responseText };
+        }
     } catch (error) {
         console.error('API call failed:', error);
         throw error;

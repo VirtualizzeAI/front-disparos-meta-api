@@ -60,6 +60,17 @@ export function Sidebar() {
                         <span>Novo Disparo</span>
                     </Link>
                 </li>
+                <li className={`nav-item ${isActive('/templates') ? 'active' : ''}`}>
+                    <Link to="/templates" style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', color: 'inherit', textDecoration: 'none' }}>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor" />
+                            <rect x="11" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.6" />
+                            <rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.6" />
+                            <rect x="11" y="11" width="7" height="7" rx="1.5" fill="currentColor" />
+                        </svg>
+                        <span>Templates</span>
+                    </Link>
+                </li>
                 <li className={`nav-item ${isActive('/profile') ? 'active' : ''}`}>
                     <Link to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', color: 'inherit', textDecoration: 'none' }}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

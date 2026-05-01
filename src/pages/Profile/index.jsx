@@ -4,7 +4,7 @@ import { API_CONFIG, apiCall } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 export function Profile() {
-    const { updateProfile } = useAuth();
+    const { updateProfile, user } = useAuth();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -12,7 +12,8 @@ export function Profile() {
         newPassword: '',
         confirmPassword: ''
     });
-    const [loading, setLoading] = useState(false);
+    const [loadingProfile, setLoadingProfile] = useState(false);
+    const [loadingPassword, setLoadingPassword] = useState(false);
 
     useEffect(() => {
         loadProfileData();
@@ -25,27 +26,34 @@ export function Profile() {
                 body: {} // auth added automatically
             });
 
-            if (result.success === true || result.success === 'true') {
-                const profile = result.user || result.profile || {};
+            const profile = result?.user || result?.profile || result?.data || result || {};
+            const resolvedName = profile.nome || profile.name || user?.name || user?.nome || '';
+            const resolvedEmail = profile.email || user?.email || '';
 
-                // Update local storage via fetch results
-                localStorage.setItem('profile', JSON.stringify(profile));
+            if (resolvedName || resolvedEmail) {
+                localStorage.setItem('profile', JSON.stringify({
+                    name: resolvedName,
+                    email: resolvedEmail
+                }));
 
                 setFormData(prev => ({
                     ...prev,
-                    name: profile.nome || '',
-                    email: profile.email || ''
+                    name: resolvedName,
+                    email: resolvedEmail
                 }));
             }
         } catch (error) {
             console.error('Error loading profile:', error);
             // Fallback
             const savedProfile = JSON.parse(localStorage.getItem('profile') || '{}');
-            if (savedProfile.name || savedProfile.email) {
+            const fallbackName = savedProfile.name || savedProfile.nome || user?.name || user?.nome || '';
+            const fallbackEmail = savedProfile.email || user?.email || '';
+
+            if (fallbackName || fallbackEmail) {
                 setFormData(prev => ({
                     ...prev,
-                    name: savedProfile.name || prev.name,
-                    email: savedProfile.email || prev.email
+                    name: fallbackName || prev.name,
+                    email: fallbackEmail || prev.email
                 }));
             }
         }
@@ -67,60 +75,82 @@ export function Profile() {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (formData.newPassword || formData.confirmPassword) {
-            if (!formData.currentPassword) {
-                alert('Por favor, informe sua senha atual.');
-                return;
-            }
-            if (formData.newPassword !== formData.confirmPassword) {
-                alert('As senhas não coincidem.');
-                return;
-            }
-            if (formData.newPassword.length < 6) {
-                alert('A nova senha deve ter pelo menos 6 caracteres.');
-                return;
-            }
+    const handleProfileUpdate = async () => {
+        if (!formData.name || !formData.email) {
+            alert('Preencha nome e email para continuar.');
+            return;
         }
 
-        setLoading(true);
+        setLoadingProfile(true);
 
         try {
-            const profileData = { name: formData.name, email: formData.email };
+            const profileData = {
+                nome: formData.name,
+                email: formData.email
+            };
 
-            // In a real app we'd call the API here.
-            // Assuming endpoint UPDATE_PROFILE handles name/email updates.
-            // And potentially CHANGE_PASSWORD for password.
+            await apiCall(API_CONFIG.ENDPOINTS.UPDATE_PROFILE, {
+                method: 'POST',
+                body: profileData
+            });
 
-            // For now, mirroring legacy behavior which mostly relies on localStorage or specific endpoints
-            // that might mock behavior or be partially implemented in the legacy code provided.
-
-            localStorage.setItem('profile', JSON.stringify(profileData));
-            updateProfile(profileData); // Update context
-
-            if (formData.newPassword) {
-                // Call password change endpoint if exists
-                // await apiCall(API_CONFIG.ENDPOINTS.CHANGE_PASSWORD, {
-                // method: 'POST',
-                // body: { currentPassword: formData.currentPassword, newPassword: formData.newPassword }
-                // });
-
-                setFormData(prev => ({
-                    ...prev,
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                }));
-            }
+            localStorage.setItem('profile', JSON.stringify({
+                name: formData.name,
+                email: formData.email
+            }));
+            updateProfile({ name: formData.name, email: formData.email });
 
             alert('Perfil atualizado com sucesso!');
         } catch (error) {
             console.error('Error updating profile:', error);
             alert('Erro ao atualizar perfil. Por favor, tente novamente.');
         } finally {
-            setLoading(false);
+            setLoadingProfile(false);
+        }
+    };
+
+    const handlePasswordChange = async () => {
+        if (!formData.currentPassword) {
+            alert('Por favor, informe sua senha atual.');
+            return;
+        }
+        if (!formData.newPassword || !formData.confirmPassword) {
+            alert('Preencha a nova senha e a confirmação.');
+            return;
+        }
+        if (formData.newPassword !== formData.confirmPassword) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+        if (formData.newPassword.length < 6) {
+            alert('A nova senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+
+        setLoadingPassword(true);
+
+        try {
+            await apiCall(API_CONFIG.ENDPOINTS.CHANGE_PASSWORD, {
+                method: 'POST',
+                body: {
+                    currentPassword: formData.currentPassword,
+                    newPassword: formData.newPassword
+                }
+            });
+
+            setFormData(prev => ({
+                ...prev,
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            }));
+
+            alert('Senha atualizada com sucesso!');
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('Erro ao atualizar senha. Por favor, tente novamente.');
+        } finally {
+            setLoadingPassword(false);
         }
     };
 
@@ -134,7 +164,7 @@ export function Profile() {
             </header>
 
             <div className="settings-container">
-                <form id="profile-form" className="form-card" onSubmit={handleSubmit}>
+                <form id="profile-form" className="form-card" onSubmit={(e) => e.preventDefault()}>
                     
 
                     <div className="form-group">
@@ -160,6 +190,19 @@ export function Profile() {
                             onChange={handleChange}
                         />
                     </div>
+
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-large"
+                        onClick={handleProfileUpdate}
+                        disabled={loadingProfile || loadingPassword}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M15 7L8 14L4 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                                strokeLinejoin="round" />
+                        </svg>
+                        {loadingProfile ? 'Atualizando...' : 'Atualizar Perfil'}
+                    </button>
 
                     <div className="form-divider"></div>
 
@@ -198,12 +241,17 @@ export function Profile() {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-large" disabled={loading}>
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-large"
+                        onClick={handlePasswordChange}
+                        disabled={loadingProfile || loadingPassword}
+                    >
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M15 7L8 14L4 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                                 strokeLinejoin="round" />
                         </svg>
-                        Salvar Perfil
+                        {loadingPassword ? 'Atualizando...' : 'Alterar Senha'}
                     </button>
                 </form>
             </div>
